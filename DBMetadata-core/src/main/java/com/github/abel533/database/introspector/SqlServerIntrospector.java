@@ -1,7 +1,7 @@
 package com.github.abel533.database.introspector;
 
 import com.github.abel533.database.DatabaseConfig;
-import com.github.abel533.utils.DBUtils;
+import com.github.abel533.utils.DBMetadataUtils;
 import com.github.abel533.utils.StringUtils;
 
 import java.sql.PreparedStatement;
@@ -12,12 +12,12 @@ import java.util.Map;
 
 public class SqlServerIntrospector extends DatabaseIntrospector {
 
-    public SqlServerIntrospector(DBUtils dbUtils) {
-        super(dbUtils);
+    public SqlServerIntrospector(DBMetadataUtils dbMetadataUtils) {
+        super(dbMetadataUtils);
     }
 
-    public SqlServerIntrospector(DBUtils dbUtils, boolean forceBigDecimals, boolean useCamelCase) {
-        super(dbUtils, forceBigDecimals, useCamelCase);
+    public SqlServerIntrospector(DBMetadataUtils dbMetadataUtils, boolean forceBigDecimals, boolean useCamelCase) {
+        super(dbMetadataUtils, forceBigDecimals, useCamelCase);
     }
 
     /**
@@ -39,17 +39,16 @@ public class SqlServerIntrospector extends DatabaseIntrospector {
                 sqlBuilder.append(" where name like ?   ");
             }
             sqlBuilder.append(")  and b.value is not null ");
-            PreparedStatement preparedStatement = dbUtils.getConnection().prepareStatement(sqlBuilder.toString());
+            PreparedStatement preparedStatement = dbMetadataUtils.getConnection().prepareStatement(sqlBuilder.toString());
             if (StringUtils.isNotEmpty(config.getSchemaPattern())) {
                 preparedStatement.setString(1, config.getSchemaPattern());
             }
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
-                answer.put(rs.getString(dbUtils.convertLetterByCase("tname")), rs.getString(dbUtils.convertLetterByCase("comments")));
+                answer.put(rs.getString(dbMetadataUtils.convertLetterByCase("tname")), rs.getString(dbMetadataUtils.convertLetterByCase("comments")));
             }
             closeResultSet(rs);
         } catch (Exception e) {
-            dbUtils.closeConnection();
             throw new RuntimeException(e);
         }
         return answer;
@@ -77,21 +76,20 @@ public class SqlServerIntrospector extends DatabaseIntrospector {
             }
             sqlBuilder.append(")  and c.value is not null");
 
-            PreparedStatement preparedStatement = dbUtils.getConnection().prepareStatement(sqlBuilder.toString());
+            PreparedStatement preparedStatement = dbMetadataUtils.getConnection().prepareStatement(sqlBuilder.toString());
             if (StringUtils.isNotEmpty(config.getSchemaPattern())) {
                 preparedStatement.setString(1, config.getSchemaPattern());
             }
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
-                String tname = rs.getString(dbUtils.convertLetterByCase("tname"));
+                String tname = rs.getString(dbMetadataUtils.convertLetterByCase("tname"));
                 if (!answer.containsKey(tname)) {
                     answer.put(tname, new HashMap<String, String>());
                 }
-                answer.get(tname).put(rs.getString(dbUtils.convertLetterByCase("cname")), rs.getString(dbUtils.convertLetterByCase("comments")));
+                answer.get(tname).put(rs.getString(dbMetadataUtils.convertLetterByCase("cname")), rs.getString(dbMetadataUtils.convertLetterByCase("comments")));
             }
             closeResultSet(rs);
         } catch (Exception e) {
-            dbUtils.closeConnection();
             throw new RuntimeException(e);
         }
         return answer;

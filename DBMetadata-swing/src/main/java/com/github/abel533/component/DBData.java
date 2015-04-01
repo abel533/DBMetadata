@@ -1,13 +1,11 @@
 package com.github.abel533.component;
 
 import com.github.abel533.database.*;
-import com.github.abel533.database.introspector.DatabaseIntrospector;
-import com.github.abel533.utils.DBUtils;
+import com.github.abel533.utils.DBMetadataUtils;
 import com.github.abel533.utils.StringUtils;
 
 import javax.swing.*;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -18,7 +16,7 @@ import java.util.*;
  */
 public class DBData {
     private static DBServer dbServer;
-    private static DBUtils dbUtils;
+    private static DBMetadataUtils dbMetadataUtils;
     private static SimpleDataSource dataSource;
     //登录系统的时候操作下面两项
     public static DBServerList dbServerList;
@@ -35,8 +33,8 @@ public class DBData {
 
     public static void init(DBServer server) {
         dbServer = server;
-        dataSource = new SimpleDataSource(server.getDialect(),server.getUrl(),server.getUser(),server.getRealPwd());
-        dbUtils = new DBUtils(dataSource);
+        dataSource = new SimpleDataSource(server.getDialect(), server.getUrl(), server.getUser(), server.getRealPwd());
+        dbMetadataUtils = new DBMetadataUtils(dataSource);
         try {
             initConfig();
         } catch (SQLException e) {
@@ -44,16 +42,12 @@ public class DBData {
         }
     }
 
-    public static boolean testConnection(){
-        return dbUtils.testConnection();
-    }
-
-    public static void closeConnection(){
-        dbUtils.closeConnection();
+    public static boolean testConnection() {
+        return dbMetadataUtils.testConnection();
     }
 
     public static String convertLetterByCase(String value) {
-        return dbUtils.convertLetterByCase(value);
+        return dbMetadataUtils.convertLetterByCase(value);
     }
 
     /**
@@ -62,96 +56,14 @@ public class DBData {
      * @throws SQLException
      */
     private static void initConfig() throws SQLException {
-        DatabaseIntrospector introspector = dbUtils.getDatabaseIntrospector();
-        DBData.catalogs = introspector.getCatalogs();
-        DBData.schemas = introspector.getSchemas();
-        DBData.config = null;
-        if (DBData.catalogs.size() == 1) {
-            if (DBData.schemas.size() == 1) {
-                DBData.config = new DatabaseConfig(DBData.catalogs.get(0), DBData.schemas.get(0));
-            } else if (DBData.schemas.size() == 0) {
-                DBData.config = new DatabaseConfig(DBData.catalogs.get(0), null);
-            }
-        } else if (DBData.catalogs.size() == 0) {
-            if (DBData.schemas.size() == 1) {
-                DBData.config = new DatabaseConfig(null, DBData.schemas.get(0));
-            } else if (DBData.schemas.size() == 0) {
-                DBData.config = new DatabaseConfig(null, null);
-            }
-        }
-        if (DBData.config == null) {
-            switch (dbUtils.getDialect()) {
-                case DB2:
-                case ORACLE:
-                    DBData.config = new DatabaseConfig(null, dbServer.getUser());
-                    break;
-                case MYSQL:
-                    if (DBData.schemas.size() > 0) {
-                        break;
-                    }
-                    String url = dataSource.getUrl();
-                    if (url.indexOf('/') > 0) {
-                        String dbName = url.substring(url.lastIndexOf('/') + 1);
-                        for (String catalog : DBData.catalogs) {
-                            if (dbName.equalsIgnoreCase(catalog)) {
-                                DBData.config = new DatabaseConfig(catalog, null);
-                                break;
-                            }
-                        }
-                    }
-                    break;
-                case SQLSERVER:
-                    String sqlserverUrl = dataSource.getUrl();
-                    String sqlserverCatalog = null;
-                    if (sqlserverUrl.indexOf('/') > 0) {
-                        String dbName = sqlserverUrl.substring(sqlserverUrl.lastIndexOf('/') + 1);
-                        for (String catalog : DBData.catalogs) {
-                            if (dbName.equalsIgnoreCase(catalog)) {
-                                sqlserverCatalog = catalog;
-                                break;
-                            }
-                        }
-                        if (sqlserverCatalog != null) {
-                            for (String schema : DBData.schemas) {
-                                if ("dbo".equalsIgnoreCase(schema)) {
-                                    DBData.config = new DatabaseConfig(sqlserverCatalog, "dbo");
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    break;
-                case POSTGRESQL:
-                    String postgreUrl = dataSource.getUrl();
-                    String postgreCatalog = null;
-                    if (postgreUrl.indexOf('/') > 0) {
-                        String dbName = postgreUrl.substring(postgreUrl.lastIndexOf('/') + 1);
-                        for (String catalog : DBData.catalogs) {
-                            if (dbName.equalsIgnoreCase(catalog)) {
-                                postgreCatalog = catalog;
-                                break;
-                            }
-                        }
-                        if (postgreCatalog != null) {
-                            for (String schema : DBData.schemas) {
-                                if ("public".equalsIgnoreCase(schema)) {
-                                    DBData.config = new DatabaseConfig(postgreCatalog, "public");
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
-
-        }
+        DBData.catalogs = dbMetadataUtils.getCatalogs();
+        DBData.schemas = dbMetadataUtils.getSchemas();
+        DBData.config = dbMetadataUtils.getDefaultConfig();
     }
 
     public static void initTables() throws SQLException {
         if (DBData.config != null) {
-            DBData.setTables(dbUtils.getDatabaseIntrospector().introspectTables(DBData.config));
+            DBData.setTables(dbMetadataUtils.introspectTables(DBData.config));
         }
     }
 

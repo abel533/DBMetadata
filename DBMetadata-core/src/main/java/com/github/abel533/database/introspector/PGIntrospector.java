@@ -1,7 +1,7 @@
 package com.github.abel533.database.introspector;
 
 import com.github.abel533.database.DatabaseConfig;
-import com.github.abel533.utils.DBUtils;
+import com.github.abel533.utils.DBMetadataUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,12 +11,12 @@ import java.util.Map;
 
 public class PGIntrospector extends DatabaseIntrospector {
 
-    public PGIntrospector(DBUtils dbUtils) {
-        super(dbUtils);
+    public PGIntrospector(DBMetadataUtils dbMetadataUtils) {
+        super(dbMetadataUtils);
     }
 
-    public PGIntrospector(DBUtils dbUtils, boolean forceBigDecimals, boolean useCamelCase) {
-        super(dbUtils, forceBigDecimals, useCamelCase);
+    public PGIntrospector(DBMetadataUtils dbMetadataUtils, boolean forceBigDecimals, boolean useCamelCase) {
+        super(dbMetadataUtils, forceBigDecimals, useCamelCase);
     }
 
     /**
@@ -29,14 +29,13 @@ public class PGIntrospector extends DatabaseIntrospector {
     protected Map<String, String> getTableComments(DatabaseConfig config) throws SQLException {
         Map<String, String> answer = new HashMap<String, String>();
         try {
-            PreparedStatement preparedStatement = dbUtils.getConnection().prepareStatement("select tname,comments from(select relname as TNAME ,col_description(c.oid, 0) as COMMENTS from pg_class c where  relkind = 'r' and relname not like 'pg_%' and relname not like 'sql_%') as temp where comments is not null ");
+            PreparedStatement preparedStatement = dbMetadataUtils.getConnection().prepareStatement("select tname,comments from(select relname as TNAME ,col_description(c.oid, 0) as COMMENTS from pg_class c where  relkind = 'r' and relname not like 'pg_%' and relname not like 'sql_%') as temp where comments is not null ");
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
-                answer.put(rs.getString(dbUtils.convertLetterByCase("tname")), rs.getString(dbUtils.convertLetterByCase("comments")));
+                answer.put(rs.getString(dbMetadataUtils.convertLetterByCase("tname")), rs.getString(dbMetadataUtils.convertLetterByCase("comments")));
             }
             closeResultSet(rs);
         } catch (Exception e) {
-            dbUtils.closeConnection();
             throw new RuntimeException(e);
         }
         return answer;
@@ -55,18 +54,17 @@ public class PGIntrospector extends DatabaseIntrospector {
         try {
             StringBuilder sqlBuilder = new StringBuilder("select tname,cname,comments from( ");
             sqlBuilder.append("SELECT col_description(a.attrelid,a.attnum) as comments,a.attname as cname,c.relname as tname FROM pg_class as c,pg_attribute as a where a.attrelid = c.oid and a.attnum>0 and c.relname not like 'pg_%' and c.relname not like 'sql_%') as temp where comments is not null ");
-            PreparedStatement preparedStatement = dbUtils.getConnection().prepareStatement(sqlBuilder.toString());
+            PreparedStatement preparedStatement = dbMetadataUtils.getConnection().prepareStatement(sqlBuilder.toString());
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
-                String tname = rs.getString(dbUtils.convertLetterByCase("tname"));
+                String tname = rs.getString(dbMetadataUtils.convertLetterByCase("tname"));
                 if (!answer.containsKey(tname)) {
                     answer.put(tname, new HashMap<String, String>());
                 }
-                answer.get(tname).put(rs.getString(dbUtils.convertLetterByCase("cname")), rs.getString(dbUtils.convertLetterByCase("comments")));
+                answer.get(tname).put(rs.getString(dbMetadataUtils.convertLetterByCase("cname")), rs.getString(dbMetadataUtils.convertLetterByCase("comments")));
             }
             closeResultSet(rs);
         } catch (Exception e) {
-            dbUtils.closeConnection();
             throw new RuntimeException(e);
         }
         return answer;

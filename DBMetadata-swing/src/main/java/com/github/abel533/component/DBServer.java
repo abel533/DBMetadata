@@ -5,49 +5,49 @@ import com.github.abel533.utils.EncrypDES;
 import com.github.abel533.utils.I18n;
 
 public class DBServer {
-	private Dialect dialect;
-	private String name;
-	private String url;
-	private String user;
-	private String pwd;
-	private transient String realPwd;
+    private Dialect dialect;
+    private String name;
+    private String url;
+    private String user;
+    private String pwd;
+    private transient String realPwd;
 
-	public Dialect getDialect() {
-		return dialect;
-	}
+    public Dialect getDialect() {
+        return dialect;
+    }
 
-	public void setDialect(Dialect dialect) {
-		this.dialect = dialect;
-	}
+    public void setDialect(Dialect dialect) {
+        this.dialect = dialect;
+    }
 
-	public String getName() {
-		if (name == null || name.length() == 0) {
-			name = dialect + "-" + url + "-" + user;
-		}
-		return name;
-	}
+    public String getName() {
+        if (name == null || name.length() == 0) {
+            name = dialect + "-" + url + "-" + user;
+        }
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getUrl() {
-		return url;
-	}
+    public String getUrl() {
+        return url;
+    }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
-	public String getUser() {
-		return user;
-	}
+    public String getUser() {
+        return user;
+    }
 
-	public void setUser(String user) {
-		this.user = user;
-	}
+    public void setUser(String user) {
+        this.user = user;
+    }
 
-	public String getPwd() {
+    public String getPwd() {
         if (pwd == null || pwd.length() == 0) {
             return "";
         }
@@ -63,18 +63,18 @@ public class DBServer {
         return pwd;
     }
 
-    public String getRealPwd(){
-		try {
-			realPwd = EncrypDES.Decryptor(pwd);
-			return realPwd;
-		} catch (Exception e) {
-			return pwd;
-		}
-	}
+    public String getRealPwd() {
+        try {
+            realPwd = EncrypDES.Decryptor(pwd);
+            return realPwd;
+        } catch (Exception e) {
+            return pwd;
+        }
+    }
 
-	public void setPwd(String pwd) {
-		this.pwd = pwd;
-	}
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
+    }
 
     @Override
     public boolean equals(Object o) {

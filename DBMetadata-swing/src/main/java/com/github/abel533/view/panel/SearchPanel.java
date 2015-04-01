@@ -11,14 +11,14 @@ import java.awt.*;
 
 /**
  * 主界面 - 查询
- * 
+ *
  * @author liuzh
  * @since 2015-03-20
  */
 public class SearchPanel extends JPanel {
-	private static final long serialVersionUID = 1L;
-	
-	private JTextF textSearchName;
+    private static final long serialVersionUID = 1L;
+
+    private JTextF textSearchName;
     private JTextF textSearchComment;
     private JTextF textChoose;
 
@@ -34,10 +34,10 @@ public class SearchPanel extends JPanel {
     private JButton btnSearch;
     private JButton btnCancel;
 
-	/**
-	 * Create the this.
-	 */
-	public SearchPanel() {
+    /**
+     * Create the this.
+     */
+    public SearchPanel() {
         this.setPreferredSize(new Dimension(811, 114));
         this.setLayout(new BorderLayout(0, 0));
 
@@ -165,49 +165,49 @@ public class SearchPanel extends JPanel {
         textSearchName = new JTextF();
         panel_10.add(textSearchName, BorderLayout.CENTER);
         textSearchName.setColumns(10);
-	}
+    }
 
-	public JTextF getTextSearchName() {
-		return textSearchName;
-	}
+    public JTextF getTextSearchName() {
+        return textSearchName;
+    }
 
-	public JTextF getTextSearchComment() {
-		return textSearchComment;
-	}
+    public JTextF getTextSearchComment() {
+        return textSearchComment;
+    }
 
-	public JTextF getTextChoose() {
-		return textChoose;
-	}
+    public JTextF getTextChoose() {
+        return textChoose;
+    }
 
-	public JRadioButton getRadioTypeTable() {
-		return radioTypeTable;
-	}
+    public JRadioButton getRadioTypeTable() {
+        return radioTypeTable;
+    }
 
-	public JRadioButton getRadioTypeField() {
-		return radioTypeField;
-	}
+    public JRadioButton getRadioTypeField() {
+        return radioTypeField;
+    }
 
-	public JCheckBox getCheckBoxQuickSearch() {
-		return checkBoxQuickSearch;
-	}
+    public JCheckBox getCheckBoxQuickSearch() {
+        return checkBoxQuickSearch;
+    }
 
-	public JCheckBox getCheckBoxCaseSensitive() {
-		return checkBoxCaseSensitive;
-	}
+    public JCheckBox getCheckBoxCaseSensitive() {
+        return checkBoxCaseSensitive;
+    }
 
-	public JRadioButton getRadioMatchEquals() {
-		return radioMatchEquals;
-	}
+    public JRadioButton getRadioMatchEquals() {
+        return radioMatchEquals;
+    }
 
-	public JRadioButton getRadioMatchContains() {
-		return radioMatchContains;
-	}
+    public JRadioButton getRadioMatchContains() {
+        return radioMatchContains;
+    }
 
-	public JButton getBtnSearch() {
-		return btnSearch;
-	}
+    public JButton getBtnSearch() {
+        return btnSearch;
+    }
 
-	public JButton getBtnCancel() {
-		return btnCancel;
-	}
+    public JButton getBtnCancel() {
+        return btnCancel;
+    }
 }

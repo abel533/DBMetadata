@@ -4,7 +4,6 @@ import com.github.abel533.component.DBData;
 import com.github.abel533.database.AbstractDatabaseProcess;
 import com.github.abel533.database.DatabaseConfig;
 import com.github.abel533.database.IntrospectedTable;
-import com.github.abel533.utils.DBUtils;
 import com.github.abel533.utils.I18n;
 import com.github.abel533.view.LoadFrame;
 import com.github.abel533.view.ToolsFrame;
@@ -111,8 +110,6 @@ public class LoadController implements Controller {
             } catch (SQLException e) {
                 e.printStackTrace();
                 System.exit(0);
-            } finally {
-                DBData.closeConnection();
             }
         }
     }

@@ -5,7 +5,7 @@
   <parent>
     <artifactId>DBMetadata</artifactId>
     <groupId>com.github.abel533</groupId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -16,7 +16,7 @@
     <dependency>
       <groupId>com.github.abel533</groupId>
       <artifactId>DBMetadata-core</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>${version}</version>
     </dependency>
     <dependency>
       <groupId>com.alibaba</groupId>

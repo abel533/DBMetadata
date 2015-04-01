@@ -5,7 +5,10 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.github.abel533.utils.I18n;
 import com.github.abel533.utils.Path;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -56,7 +59,7 @@ public class DBServerList {
             reader = new BufferedReader(new FileReader(Path.db_json));
             String line;
             StringBuilder jsonBuilder = new StringBuilder();
-            while((line = reader.readLine())!=null) {
+            while ((line = reader.readLine()) != null) {
                 jsonBuilder.append(line).append("\n");
             }
             if (jsonBuilder.length() == 0) {
@@ -65,7 +68,7 @@ public class DBServerList {
             DBServerList dbServerList = JSON.parseObject(jsonBuilder.toString(), DBServerList.class);
             return dbServerList;
         } catch (Exception e) {
-        	e.printStackTrace();
+            e.printStackTrace();
             throw new RuntimeException(I18n.key("tools.login.serverList.read.error"));
         } finally {
             if (reader != null) {

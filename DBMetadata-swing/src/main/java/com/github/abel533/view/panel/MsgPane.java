@@ -6,20 +6,20 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MsgPane extends JScrollPane {
-	private static final long serialVersionUID = 1L;
-	
-	private JTextArea loadMsg;
-	
-	public MsgPane() {
-		loadMsg = new JTextArea();
-		loadMsg.setFont(Code.TEXT_MSG);
-		loadMsg.setEditable(false);
-		loadMsg.setBackground(new Color(0, 0, 0));
-		loadMsg.setForeground(new Color(0, 128, 0));
-		this.setViewportView(loadMsg);
-	}
+    private static final long serialVersionUID = 1L;
 
-	public JTextArea getLoadMsg() {
-		return loadMsg;
-	}
+    private JTextArea loadMsg;
+
+    public MsgPane() {
+        loadMsg = new JTextArea();
+        loadMsg.setFont(Code.TEXT_MSG);
+        loadMsg.setEditable(false);
+        loadMsg.setBackground(new Color(0, 0, 0));
+        loadMsg.setForeground(new Color(0, 128, 0));
+        this.setViewportView(loadMsg);
+    }
+
+    public JTextArea getLoadMsg() {
+        return loadMsg;
+    }
 }

@@ -2,6 +2,7 @@ package com.github.abel533.utils;
 
 import com.github.abel533.database.DatabaseConfig;
 import com.github.abel533.database.Dialect;
+import com.github.abel533.database.IntrospectedTable;
 import com.github.abel533.database.SimpleDataSource;
 import com.github.abel533.database.introspector.DatabaseIntrospector;
 import com.github.abel533.database.introspector.OracleIntrospector;
@@ -18,24 +19,36 @@ import java.util.List;
  *
  * @author liuzh
  */
-public class DBUtils {
+public class DBMetadataUtils {
     private SimpleDataSource dataSource;
     private Connection connection;
     private LetterCase letterCase;
     private Dialect dialect;
+    private DatabaseIntrospector introspector;
+    private DatabaseMetaData databaseMetaData;
+    private List<String> catalogs;
+    private List<String> schemas;
 
-    public DBUtils(SimpleDataSource dataSource) {
+    public DBMetadataUtils(SimpleDataSource dataSource) {
+        this(dataSource, false, true);
+    }
+
+    public DBMetadataUtils(SimpleDataSource dataSource, boolean forceBigDecimals, boolean useCamelCase) {
         if (dataSource == null) {
             throw new NullPointerException("Argument dataSource can't be null!");
         }
         this.dataSource = dataSource;
         this.dialect = dataSource.getDialect();
         try {
-            this.connection = dataSource.getConnection();
+            initLetterCase();
+            this.introspector = getDatabaseIntrospector(forceBigDecimals, useCamelCase);
+            getConnection();
+            this.catalogs = introspector.getCatalogs();
+            this.schemas = introspector.getSchemas();
+            closeConnection();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        initLetterCase();
     }
 
     private void initLetterCase() {
@@ -67,19 +80,25 @@ public class DBUtils {
         }
     }
 
-    public DatabaseMetaData getDatabaseMetaData() {
-        try {
-            return getConnection().getMetaData();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+    public DatabaseMetaData getDatabaseMetaData() throws SQLException {
+        if (connection != null && !connection.isClosed()) {
+            if (databaseMetaData != null) {
+                return databaseMetaData;
+            } else {
+                databaseMetaData = connection.getMetaData();
+                return databaseMetaData;
+            }
+        } else {
+            databaseMetaData = getConnection().getMetaData();
+            return databaseMetaData;
         }
     }
 
-    public DatabaseIntrospector getDatabaseIntrospector() {
-        return getDatabaseIntrospector(false, true);
+    public DatabaseIntrospector getIntrospector() {
+        return introspector;
     }
 
-    public DatabaseIntrospector getDatabaseIntrospector(boolean forceBigDecimals, boolean useCamelCase) {
+    private DatabaseIntrospector getDatabaseIntrospector(boolean forceBigDecimals, boolean useCamelCase) {
         switch (dataSource.getDialect()) {
             case ORACLE:
                 return new OracleIntrospector(this, forceBigDecimals, useCamelCase);
@@ -96,11 +115,29 @@ public class DBUtils {
         }
     }
 
-    public void closeConnection() {
+    public List<String> getCatalogs() throws SQLException {
+        return catalogs;
+    }
+
+    public List<String> getSchemas() throws SQLException {
+        return schemas;
+    }
+
+    public List<IntrospectedTable> introspectTables(DatabaseConfig config) throws SQLException {
+        getConnection();
+        try {
+            return introspector.introspectTables(config);
+        } finally {
+            closeConnection();
+        }
+    }
+
+    private void closeConnection() {
         if (connection != null) {
             try {
                 connection.close();
                 connection = null;
+                databaseMetaData = null;
             } catch (SQLException e) {
             }
         }
@@ -114,12 +151,7 @@ public class DBUtils {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                }
-            }
+            closeConnection();
         }
         return false;
     }
@@ -151,9 +183,6 @@ public class DBUtils {
      * @throws SQLException
      */
     public DatabaseConfig getDefaultConfig() throws SQLException {
-        DatabaseIntrospector introspector = getDatabaseIntrospector();
-        List<String> catalogs = introspector.getCatalogs();
-        List<String> schemas = introspector.getSchemas();
         DatabaseConfig config = null;
         if (catalogs.size() == 1) {
             if (schemas.size() == 1) {
@@ -232,7 +261,6 @@ public class DBUtils {
                     }
                     break;
                 default:
-                    config = new DatabaseConfig();
                     break;
             }
 

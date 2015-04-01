@@ -9,57 +9,57 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class LoginFrame extends JFrame {
-	private static final long serialVersionUID = 1L;
-	
-	private JPanel contentPane;
-	private JList<String> serverList;
-	private LoginPanel loginPanel;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * Create the frame.
-	 */
-	public LoginFrame() {
-		setIconImage(ICON.LOGO_PNG.getImage());
-		setPreferredSize(new Dimension(880, 340));
-		setMinimumSize(new Dimension(880, 340));
-		setTitle(I18n.key("tools.login.title"));
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 880, 279);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
-		setContentPane(contentPane);
+    private JPanel contentPane;
+    private JList<String> serverList;
+    private LoginPanel loginPanel;
 
-		JPanel panelServerList = new JPanel();
-		panelServerList.setPreferredSize(new Dimension(300, 10));
-		panelServerList.setLayout(new BorderLayout(0, 0));
+    /**
+     * Create the frame.
+     */
+    public LoginFrame() {
+        setIconImage(ICON.LOGO_PNG.getImage());
+        setPreferredSize(new Dimension(880, 340));
+        setMinimumSize(new Dimension(880, 340));
+        setTitle(I18n.key("tools.login.title"));
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setBounds(100, 100, 880, 279);
+        contentPane = new JPanel();
+        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        contentPane.setLayout(new BorderLayout(0, 0));
+        setContentPane(contentPane);
 
-		JScrollPane scrollPane = new JScrollPane();
-		panelServerList.add(scrollPane, BorderLayout.CENTER);
-		scrollPane.setPreferredSize(new Dimension(200, 2));
+        JPanel panelServerList = new JPanel();
+        panelServerList.setPreferredSize(new Dimension(300, 10));
+        panelServerList.setLayout(new BorderLayout(0, 0));
 
-		serverList = new JList<String>();
+        JScrollPane scrollPane = new JScrollPane();
+        panelServerList.add(scrollPane, BorderLayout.CENTER);
+        scrollPane.setPreferredSize(new Dimension(200, 2));
+
+        serverList = new JList<String>();
         serverList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		scrollPane.setViewportView(serverList);
+        scrollPane.setViewportView(serverList);
 
-		JLabel label = new JLabel(I18n.key("tools.login.serverList"));
-		panelServerList.add(label, BorderLayout.NORTH);
+        JLabel label = new JLabel(I18n.key("tools.login.serverList"));
+        panelServerList.add(label, BorderLayout.NORTH);
 
 
-		JSplitPane splitPane = new JSplitPane();
-		splitPane.setResizeWeight(1.0);
-		contentPane.add(splitPane, BorderLayout.CENTER);
+        JSplitPane splitPane = new JSplitPane();
+        splitPane.setResizeWeight(1.0);
+        contentPane.add(splitPane, BorderLayout.CENTER);
 
-		loginPanel = new LoginPanel();
-		splitPane.setRightComponent(panelServerList);
-		splitPane.setLeftComponent(loginPanel);
-	}
+        loginPanel = new LoginPanel();
+        splitPane.setRightComponent(panelServerList);
+        splitPane.setLeftComponent(loginPanel);
+    }
 
-	public JList<String> getServerList() {
-		return serverList;
-	}
+    public JList<String> getServerList() {
+        return serverList;
+    }
 
-	public LoginPanel getLoginPanel() {
-		return loginPanel;
-	}
+    public LoginPanel getLoginPanel() {
+        return loginPanel;
+    }
 }

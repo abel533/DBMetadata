@@ -1,9 +1,11 @@
 package com.github.abel533;
 
 
-import com.github.abel533.database.*;
-import com.github.abel533.database.introspector.DatabaseIntrospector;
-import com.github.abel533.utils.DBUtils;
+import com.github.abel533.database.Dialect;
+import com.github.abel533.database.IntrospectedColumn;
+import com.github.abel533.database.IntrospectedTable;
+import com.github.abel533.database.SimpleDataSource;
+import com.github.abel533.utils.DBMetadataUtils;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -16,27 +18,18 @@ public class DatabaseTest {
     public static void main(String[] args) {
         SimpleDataSource dataSource = new SimpleDataSource(
                 Dialect.MYSQL,
-                "jdbc:mysql://192.168.123.151:3306/nmgsbx",
-                "nmgsbx",
-                "654321"
+                "jdbc:mysql://localhost:3306/test",
+                "root",
+                ""
         );
-        DBUtils dbUtils = null;
+        DBMetadataUtils dbMetadataUtils = null;
         try {
-            dbUtils = new DBUtils(dataSource);
-            DatabaseIntrospector introspector = dbUtils.getDatabaseIntrospector();
+            dbMetadataUtils = new DBMetadataUtils(dataSource);
 
-//            printStringList(introspector.getCatalogs(), "Catalogs");
-//
-//            printStringList(introspector.getSchemas(), "Schemas");
-//
-//            printStringList(introspector.getTableTypes(), "TableTypes");
-//
-//            DatabaseConfig config = new DatabaseConfig("nmgsbx", null);
-
-            List<IntrospectedTable> list = introspector.introspectTables(dbUtils.getDefaultConfig());
+            List<IntrospectedTable> list = dbMetadataUtils.introspectTables(dbMetadataUtils.getDefaultConfig());
 
             for (IntrospectedTable table : list) {
-                System.out.println("===============" + table.getName() + ":" + table.getRemarks() + "==============");
+                System.out.println(table.getName() + ":");
                 for (IntrospectedColumn column : table.getAllColumns()) {
                     System.out.println(column.getName() + " - " +
                             column.getJdbcTypeName() + " - " +
@@ -48,19 +41,6 @@ public class DatabaseTest {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            if (dbUtils != null) {
-                dbUtils.closeConnection();
-            }
-        }
-    }
-
-    public static void printStringList(List<String> list, String title) {
-        if (list != null) {
-            System.out.println("===========" + title + "===========");
-            for (String string : list) {
-                System.out.println(string);
-            }
         }
     }
 

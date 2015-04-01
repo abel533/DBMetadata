@@ -6,12 +6,12 @@ import javax.swing.*;
 import java.awt.*;
 
 public class TableSplitPane extends JSplitPane {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     private JTable dbTable;
     private JTable dbField;
 
-	public TableSplitPane() {
+    public TableSplitPane() {
         this.setResizeWeight(0.3);
 
         JPanel panelTable = new JPanel();
@@ -25,7 +25,7 @@ public class TableSplitPane extends JSplitPane {
         dbTable.setFont(Code.TEXT_TABLE);
 
         scrollPane.setViewportView(dbTable);
-        
+
         JPanel panel_11 = new JPanel();
         panelTable.add(panel_11, BorderLayout.NORTH);
         panel_11.setLayout(new BorderLayout(0, 0));
@@ -40,13 +40,13 @@ public class TableSplitPane extends JSplitPane {
         dbField = new JTable();
         dbField.setFont(Code.TEXT_TABLE);
         scrollPane_1.setViewportView(dbField);
-	}
+    }
 
-	public JTable getDbTable() {
-		return dbTable;
-	}
+    public JTable getDbTable() {
+        return dbTable;
+    }
 
-	public JTable getDbField() {
-		return dbField;
-	}
+    public JTable getDbField() {
+        return dbField;
+    }
 }

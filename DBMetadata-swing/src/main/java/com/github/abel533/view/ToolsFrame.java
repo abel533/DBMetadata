@@ -30,30 +30,30 @@ public class ToolsFrame extends JFrame {
         setContentPane(contentPane);
 
         tableSplitPane = new TableSplitPane();
-        contentPane.add(tableSplitPane,BorderLayout.CENTER);
+        contentPane.add(tableSplitPane, BorderLayout.CENTER);
 
         searchPanel = new SearchPanel();
         contentPane.add(searchPanel, BorderLayout.NORTH);
-        
+
         controlPanel = new ControlPanel();
         contentPane.add(controlPanel, BorderLayout.SOUTH);
 
         new ToolsController(this).initView().initAction();
     }
 
-	public JPanel getContentPane() {
-		return contentPane;
-	}
+    public JPanel getContentPane() {
+        return contentPane;
+    }
 
-	public TableSplitPane getTableSplitPane() {
-		return tableSplitPane;
-	}
+    public TableSplitPane getTableSplitPane() {
+        return tableSplitPane;
+    }
 
-	public SearchPanel getSearchPanel() {
-		return searchPanel;
-	}
+    public SearchPanel getSearchPanel() {
+        return searchPanel;
+    }
 
-	public ControlPanel getControlPanel() {
-		return controlPanel;
-	}
+    public ControlPanel getControlPanel() {
+        return controlPanel;
+    }
 }

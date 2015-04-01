@@ -4,13 +4,15 @@ import com.github.abel533.database.DatabaseConfig;
 import com.github.abel533.database.FullyQualifiedJavaType;
 import com.github.abel533.database.IntrospectedColumn;
 import com.github.abel533.database.IntrospectedTable;
-import com.github.abel533.utils.DBUtils;
+import com.github.abel533.utils.DBMetadataUtils;
 import com.github.abel533.utils.JavaBeansUtil;
 
 import java.math.BigDecimal;
-import java.sql.*;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 import java.util.*;
-import java.util.Date;
 
 public class DatabaseIntrospector {
 
@@ -86,18 +88,16 @@ public class DatabaseIntrospector {
                 new FullyQualifiedJavaType(String.class.getName())));
     }
 
-    protected DBUtils dbUtils;
-    protected DatabaseMetaData databaseMetaData;
+    protected DBMetadataUtils dbMetadataUtils;
     protected boolean forceBigDecimals;
     protected boolean useCamelCase;
 
-    public DatabaseIntrospector(DBUtils dbUtils) {
-        this(dbUtils, false, true);
+    public DatabaseIntrospector(DBMetadataUtils dbMetadataUtils) {
+        this(dbMetadataUtils, false, true);
     }
 
-    public DatabaseIntrospector(DBUtils dbUtils, boolean forceBigDecimals, boolean useCamelCase) {
-        this.dbUtils = dbUtils;
-        this.databaseMetaData = dbUtils.getDatabaseMetaData();
+    public DatabaseIntrospector(DBMetadataUtils dbMetadataUtils, boolean forceBigDecimals, boolean useCamelCase) {
+        this.dbMetadataUtils = dbMetadataUtils;
         this.forceBigDecimals = forceBigDecimals;
         this.useCamelCase = useCamelCase;
     }
@@ -160,7 +160,7 @@ public class DatabaseIntrospector {
     }
 
     public List<String> getCatalogs() throws SQLException {
-        ResultSet rs = databaseMetaData.getCatalogs();
+        ResultSet rs = dbMetadataUtils.getDatabaseMetaData().getCatalogs();
         List<String> catalogs = new ArrayList<String>();
         while (rs.next()) {
             catalogs.add(rs.getString(1));
@@ -170,7 +170,7 @@ public class DatabaseIntrospector {
     }
 
     public List<String> getSchemas() throws SQLException {
-        ResultSet rs = databaseMetaData.getSchemas();
+        ResultSet rs = dbMetadataUtils.getDatabaseMetaData().getSchemas();
         List<String> schemas = new ArrayList<String>();
         while (rs.next()) {
             schemas.add(rs.getString(1));
@@ -180,7 +180,7 @@ public class DatabaseIntrospector {
     }
 
     public List<String> getTableTypes() throws SQLException {
-        ResultSet rs = databaseMetaData.getTableTypes();
+        ResultSet rs = dbMetadataUtils.getDatabaseMetaData().getTableTypes();
         List<String> tableType = new ArrayList<String>();
         while (rs.next()) {
             tableType.add(rs.getString(1));
@@ -199,7 +199,7 @@ public class DatabaseIntrospector {
                                        IntrospectedTable introspectedTable) {
         ResultSet rs = null;
         try {
-            rs = databaseMetaData.getPrimaryKeys(
+            rs = dbMetadataUtils.getDatabaseMetaData().getPrimaryKeys(
                     config.getCatalog(),
                     config.getSchemaPattern(),
                     introspectedTable.getName());
@@ -290,14 +290,14 @@ public class DatabaseIntrospector {
         String localCatalog;
         String localSchema;
         String localTableName;
-        if (databaseMetaData.storesLowerCaseIdentifiers()) {
+        if (dbMetadataUtils.getDatabaseMetaData().storesLowerCaseIdentifiers()) {
             localCatalog = config.getCatalog() == null ? null : config.getCatalog()
                     .toLowerCase();
             localSchema = config.getSchemaPattern() == null ? null : config.getSchemaPattern()
                     .toLowerCase();
             localTableName = config.getTableNamePattern() == null ? null : config
                     .getTableNamePattern().toLowerCase();
-        } else if (databaseMetaData.storesUpperCaseIdentifiers()) {
+        } else if (dbMetadataUtils.getDatabaseMetaData().storesUpperCaseIdentifiers()) {
             localCatalog = config.getCatalog() == null ? null : config.getCatalog()
                     .toUpperCase();
             localSchema = config.getSchemaPattern() == null ? null : config.getSchemaPattern()
@@ -324,7 +324,7 @@ public class DatabaseIntrospector {
     protected Map<IntrospectedTable, List<IntrospectedColumn>> getColumns(DatabaseConfig config) throws SQLException {
         Map<IntrospectedTable, List<IntrospectedColumn>> answer = new HashMap<IntrospectedTable, List<IntrospectedColumn>>();
 
-        ResultSet rs = databaseMetaData.getColumns(
+        ResultSet rs = dbMetadataUtils.getDatabaseMetaData().getColumns(
                 config.getCatalog(),
                 config.getSchemaPattern(),
                 config.getTableNamePattern(),
@@ -419,7 +419,7 @@ public class DatabaseIntrospector {
      * @throws SQLException
      */
     protected Map<String, String> getTableComments(DatabaseConfig config) throws SQLException {
-        ResultSet rs = databaseMetaData.getTables(config.getCatalog(), config.getSchemaPattern(), config.getTableNamePattern(), null);
+        ResultSet rs = dbMetadataUtils.getDatabaseMetaData().getTables(config.getCatalog(), config.getSchemaPattern(), config.getTableNamePattern(), null);
         Map<String, String> answer = new HashMap<String, String>();
         while (rs.next()) {
             answer.put(rs.getString("TABLE_NAME"), rs.getString("REMARKS"));

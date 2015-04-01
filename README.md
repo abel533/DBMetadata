@@ -1,90 +1,96 @@
 #数据库元数据
 
-本工具仅仅用于数据库表和字段的查询。
+本工具可用于数据库表和字段的查询，以及数据库元数据的进一步使用。
 
-本工具有两种用途：
+#本工具目前分为两部分
 
-- 一种是直接使用，在Swing界面中对表和字段进行查询。
+##DBMetadata-core
 
-- 第二种是将本工具作为一个获取数据库元数据的基本jar包。
+数据库元数据核心部分，该部分完全独立，不依赖任何第三方，获取元数据部分的代码参考了MyBatis Generator。
 
-第一种用法很简单，不需要专门讲，所以这里先说第二种用途。
+如果你要连接数据库，需要有该数据库的JDBC驱动。
 
-##获取数据库元数据
+###使用方法：
 
-数据库元数据是本项目的核心，获取元数据部分的代码参考了MyBatis Generator。
+###1. 引入jar包或者Maven依赖：
 
-想要使用本工具获取数据库元数据信息，只需要导入<b>dbmetadata-core.xxx.jar</b>即可。
-
-###稍后会上传到maven中，并且提供jar包下载的地址。
-
-##如何使用core
-
-###一、引入jar包或者maven依赖
-
-1. 在maven中加入dbmetadata-core的依赖，或者引入dbmetadata-core.xxx.jar包。
-
-2. 你的项目中，还需要有访问数据库的jdbc驱动。
-
-注:<b>如果你使用的sqlserver，你需要使用jtds！</b>
-
-###二、使用方法
-
-```java
-SimpleDataSource dataSource = new SimpleDataSource(
-                Dialect.MYSQL,
-                "jdbc:mysql://localhost:3306/mydb",
-                "root",
-                ""
-);
-DBUtils dbUtils = null;
-try {
-    dbUtils = new DBUtils(dataSource);
-    DatabaseIntrospector introspector = dbUtils.getDatabaseIntrospector();
-
-    DatabaseConfig config = new DatabaseConfig("mydb", null);
-
-    List<IntrospectedTable> list = introspector.introspectTables(config);
-
-    for (IntrospectedTable table : list) {
-        System.out.println("===============" + table.getName() + ":" + table.getRemarks() + "==============");
-        for (IntrospectedColumn column : table.getAllColumns()) {
-            System.out.println(column.getName() + " - " +
-                    column.getJdbcTypeName() + " - " +
-                    column.getJavaProperty() + " - " +
-                    column.getJavaProperty() + " - " +
-                    column.getFullyQualifiedJavaType().getFullyQualifiedName() + " - " +
-                    column.getRemarks());
-        }
-    }
-} catch (SQLException e) {
-    e.printStackTrace();
-} finally {
-    if (dbUtils != null) {
-        dbUtils.closeConnection();
-    }
-}
+```xml
+<dependency>
+    <groupId>com.github.abel533</groupId>
+    <artifactId>DBMetadata-core</artifactId>
+    <version>0.1.0</version>
+</dependency>
 ```
 
-在你通过`introspector.introspectTables(config)`获取到所有表的信息后，你就可以做其他操作了，例如生成代码等等。
+###2. 使用方法
+
+首先创建一个`SimpleDataSource`:
+```java
+SimpleDataSource dataSource = new SimpleDataSource(
+        Dialect.MYSQL,
+        "jdbc:mysql://localhost:3306/test",
+        "root",
+        ""
+);
+```
+除了上面这种方式外，还可以使用`SimpleDataSource(Dialect dialect, DataSource dataSource)`这个构造方法，直接使用其他的`DataSource`。
+
+然后就是用创建好的`dataSource`去创建`DBMetadataUtils`:
+
+```java
+DBMetadataUtils dbMetadataUtils = new DBMetadataUtils(dataSource);
+```
+
+创建一个`DatabaseConfig`,调用`introspectTables(config)`方法获取数据库表的元数据：
+```java
+DatabaseConfig config = new DatabaseConfig("mydb", null);
+List<IntrospectedTable> list = dbMetadataUtils.introspectTables(config);
+```
 
 这里需要注意`DatabaseConfig`，他有下面三个构造方法：
 
 - DatabaseConfig()
- 
+
 - DatabaseConfig(String catalog, String schemaPattern)
- 
+
 - DatabaseConfig(String catalog, String schemaPattern, String tableNamePattern)
 
 一般情况下我们需要设置`catalog`和`schemaPatter`，还可以设置`tableNamePattern`来限定要获取的表。
 
 其中`schemaPatter`和`tableNamePattern`都支持sql的`%`和`_`匹配。
 
-使用`dbUtils.getDefaultConfig()`可以根据当前数据库的类型获取一个默认的`DatabaseConfig`，建议手动创建。
+获取数据库表的元数据后，我们就可以利用这些数据了。
 
-##二次开发
+下面代码是简单的将这些信息输出到控制台：
 
+```java
+for (IntrospectedTable table : list) {
+    System.out.println(table.getName() + ":");
+    for (IntrospectedColumn column : table.getAllColumns()) {
+        System.out.println(column.getName() + " - " +
+                column.getJdbcTypeName() + " - " +
+                column.getJavaProperty() + " - " +
+                column.getJavaProperty() + " - " +
+                column.getFullyQualifiedJavaType().getFullyQualifiedName() + " - " +
+                column.getRemarks());
+    }
+}
+```
 
-##Swing界面
+##DBMetadata-swing
 
-你可以从这里下载:
+这个子项目也算是一个对**DBMetadata-core**的使用，通过上述工具获取元数据后，使用swing界面展示数据，并且可以通过查询来筛选符合要求的数据。
+
+这个项目除了实现基本的表和字段查询外，还算是一个基于界面使用该工具的基础，你可以在该项目基础上增加其他功能。
+
+###启动
+
+运行`com.github.abel533.Launch`即可启动本项目。
+
+本项目提供打包好的程序可供直接使用。
+
+下载地址:待补充
+
+###界面预览
+
+待补充

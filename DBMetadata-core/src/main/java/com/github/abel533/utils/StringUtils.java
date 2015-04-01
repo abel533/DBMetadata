@@ -3,7 +3,6 @@ package com.github.abel533.utils;
 import java.util.List;
 
 /**
- *
  * @author liuzh
  * @since 2015-03-19
  */

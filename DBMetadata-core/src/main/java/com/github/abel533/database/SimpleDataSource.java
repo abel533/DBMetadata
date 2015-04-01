@@ -11,17 +11,29 @@ import java.util.logging.Logger;
 /**
  * 数据源
  */
-public class SimpleDataSource implements DataSource {
+public final class SimpleDataSource implements DataSource {
     private Dialect dialect;
     private String url;
     private String user;
     private String pwd;
+    private DataSource delegate;
+
+    public SimpleDataSource(Dialect dialect, DataSource dataSource) {
+        this.dialect = dialect;
+        this.delegate = dataSource;
+        try {
+            Class.forName(dialect.getDriverClass());
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("找不到指定的数据库驱动:" + dialect.getDriverClass());
+        }
+    }
 
     public SimpleDataSource(Dialect dialect, String url, String user, String pwd) {
         this.dialect = dialect;
         this.url = url;
         this.user = user;
         this.pwd = pwd;
+        this.delegate = this;
         try {
             Class.forName(dialect.getDriverClass());
         } catch (ClassNotFoundException e) {
@@ -43,12 +55,20 @@ public class SimpleDataSource implements DataSource {
 
     @Override
     public Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(url, user, pwd);
+        if (delegate instanceof SimpleDataSource) {
+            return DriverManager.getConnection(url, user, pwd);
+        } else {
+            return delegate.getConnection();
+        }
     }
 
     @Override
     public Connection getConnection(String username, String password) throws SQLException {
-        return DriverManager.getConnection(url, username, password);
+        if (delegate instanceof SimpleDataSource) {
+            return DriverManager.getConnection(url, username, password);
+        } else {
+            return delegate.getConnection(username, password);
+        }
     }
 
     @Override

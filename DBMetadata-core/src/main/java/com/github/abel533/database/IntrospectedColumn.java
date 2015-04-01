@@ -133,7 +133,7 @@ public class IntrospectedColumn extends IntrospectedBase {
 
     public String getJdbcTypeName() {
         if (jdbcTypeName == null) {
-            return "OTHER"; 
+            return "OTHER";
         }
 
         return jdbcTypeName;

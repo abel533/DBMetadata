@@ -26,7 +26,7 @@ public class JavaBeansUtil {
     }
 
     public static String getGetterMethodName(String property,
-            FullyQualifiedJavaType fullyQualifiedJavaType) {
+                                             FullyQualifiedJavaType fullyQualifiedJavaType) {
         StringBuilder sb = new StringBuilder();
 
         sb.append(property);
@@ -45,7 +45,7 @@ public class JavaBeansUtil {
 
         return sb.toString();
     }
-    
+
     public static String getSetterMethodName(String property) {
         StringBuilder sb = new StringBuilder();
 
@@ -62,7 +62,7 @@ public class JavaBeansUtil {
     }
 
     public static String getCamelCaseString(String inputString,
-            boolean firstCharacterUppercase) {
+                                            boolean firstCharacterUppercase) {
         StringBuilder sb = new StringBuilder();
 
         boolean nextUpperCase = false;
@@ -70,27 +70,27 @@ public class JavaBeansUtil {
             char c = inputString.charAt(i);
 
             switch (c) {
-            case '_':
-            case '-':
-            case '@':
-            case '$':
-            case '#':
-            case ' ':
-            case '/':
-            case '&':
-                if (sb.length() > 0) {
-                    nextUpperCase = true;
-                }
-                break;
+                case '_':
+                case '-':
+                case '@':
+                case '$':
+                case '#':
+                case ' ':
+                case '/':
+                case '&':
+                    if (sb.length() > 0) {
+                        nextUpperCase = true;
+                    }
+                    break;
 
-            default:
-                if (nextUpperCase) {
-                    sb.append(Character.toUpperCase(c));
-                    nextUpperCase = false;
-                } else {
-                    sb.append(Character.toLowerCase(c));
-                }
-                break;
+                default:
+                    if (nextUpperCase) {
+                        sb.append(Character.toUpperCase(c));
+                        nextUpperCase = false;
+                    } else {
+                        sb.append(Character.toLowerCase(c));
+                    }
+                    break;
             }
         }
 

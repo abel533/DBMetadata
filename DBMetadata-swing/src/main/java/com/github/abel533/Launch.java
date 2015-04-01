@@ -38,7 +38,7 @@ public class Launch {
             public void run() {
                 LoginFrame loginFrame = new LoginFrame();
                 // 绑定控制层并初始化
-        		new LoginController(loginFrame).initView().initAction();
+                new LoginController(loginFrame).initView().initAction();
                 loginFrame.setLocationRelativeTo(null);
                 loginFrame.setVisible(true);
             }
