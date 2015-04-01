@@ -25,15 +25,15 @@ public class DatabaseTest {
             dbUtils = new DBUtils(dataSource);
             DatabaseIntrospector introspector = dbUtils.getDatabaseIntrospector();
 
-            printStringList(introspector.getCatalogs(), "Catalogs");
+//            printStringList(introspector.getCatalogs(), "Catalogs");
+//
+//            printStringList(introspector.getSchemas(), "Schemas");
+//
+//            printStringList(introspector.getTableTypes(), "TableTypes");
+//
+//            DatabaseConfig config = new DatabaseConfig("nmgsbx", null);
 
-            printStringList(introspector.getSchemas(), "Schemas");
-
-            printStringList(introspector.getTableTypes(), "TableTypes");
-
-            DatabaseConfig config = new DatabaseConfig("nmgsbx", null);
-
-            List<IntrospectedTable> list = introspector.introspectTables(config);
+            List<IntrospectedTable> list = introspector.introspectTables(dbUtils.getDefaultConfig());
 
             for (IntrospectedTable table : list) {
                 System.out.println("===============" + table.getName() + ":" + table.getRemarks() + "==============");
