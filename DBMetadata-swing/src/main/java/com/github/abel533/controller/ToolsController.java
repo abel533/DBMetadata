@@ -7,7 +7,6 @@ import com.github.abel533.database.DatabaseConfig;
 import com.github.abel533.database.IntrospectedTable;
 import com.github.abel533.database.MatchType;
 import com.github.abel533.service.ToolsService;
-import com.github.abel533.utils.DBUtils;
 import com.github.abel533.utils.I18n;
 import com.github.abel533.utils.StringUtils;
 import com.github.abel533.view.LoginFrame;
@@ -271,8 +270,6 @@ public class ToolsController implements Controller {
                     toolsService.loadAll();
                 } catch (SQLException e1) {
                     JOptionPane.showMessageDialog(toolsFrame, e1.getMessage());
-                } finally {
-                    DBData.closeConnection();
                 }
             }
         }).start();
