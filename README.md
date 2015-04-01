@@ -22,6 +22,8 @@
 </dependency>
 ```
 
+下载Jar包:[DBMetadata-core-0.1.0.jar](https://oss.sonatype.org/content/repositories/releases/com/github/abel533/DBMetadata-core/0.1.0/DBMetadata-core-0.1.0.jar)
+
 ###2. 使用方法
 
 首先创建一个`SimpleDataSource`:
@@ -89,8 +91,24 @@ for (IntrospectedTable table : list) {
 
 本项目提供打包好的程序可供直接使用。
 
-下载地址:待补充
+下载地址:[http://pan.baidu.com/s/1poGI6](http://pan.baidu.com/s/1poGI6)
+
+**程序为绿色版，需要jre1.7+支持**
+
+**Windows**
+
+根据你jre是32位还是64位来选择dbs_32.exe或者dbs_64.exe来运行。
+
+**linux**
+
+首先给run.sh增加执行权限，然后运行run.sh
 
 ###界面预览
 
-待补充
+登录界面
+
+![登录](http://img.blog.csdn.net/20150323200233549)
+
+主界面
+
+![主界面](http://img.blog.csdn.net/20150323200217186)
