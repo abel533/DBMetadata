@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>DBMetadata</artifactId>
+    <groupId>com.github.abel533</groupId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>DBMetadata-swing</artifactId>
+  <packaging>jar</packaging>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.github.abel533</groupId>
+      <artifactId>DBMetadata-core</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>fastjson</artifactId>
+      <version>1.2.4</version>
+    </dependency>
+
+    <!--swing-beautyeye-->
+    <dependency>
+      <groupId>beautyeye_lnf</groupId>
+      <artifactId>beautyeye_lnf</artifactId>
+      <version>1.0</version>
+      <scope>system</scope>
+      <systemPath>${basedir}/lib/beautyeye_lnf.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>ninepatch4j</groupId>
+      <artifactId>ninepatch4j</artifactId>
+      <version>1.0</version>
+      <scope>system</scope>
+      <systemPath>${basedir}/lib/ninepatch4j.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>swing-worker</groupId>
+      <artifactId>swing-worker</artifactId>
+      <version>1.0</version>
+      <scope>system</scope>
+      <systemPath>${basedir}/lib/swing-worker-1.2(1.6-).jar</systemPath>
+    </dependency>
+
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>5.1.29</version>
+      <optional>true</optional>
+    </dependency>
+  </dependencies>
+</project>
