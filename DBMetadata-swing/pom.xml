@@ -46,12 +46,5 @@
       <scope>system</scope>
       <systemPath>${basedir}/lib/swing-worker-1.2(1.6-).jar</systemPath>
     </dependency>
-
-    <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <version>5.1.29</version>
-      <optional>true</optional>
-    </dependency>
   </dependencies>
 </project>

@@ -1,9 +1,6 @@
 package com.github.abel533.utils;
 
-import com.github.abel533.database.DatabaseConfig;
-import com.github.abel533.database.Dialect;
-import com.github.abel533.database.IntrospectedTable;
-import com.github.abel533.database.SimpleDataSource;
+import com.github.abel533.database.*;
 import com.github.abel533.database.introspector.DatabaseIntrospector;
 import com.github.abel533.database.introspector.OracleIntrospector;
 import com.github.abel533.database.introspector.PGIntrospector;
@@ -12,6 +9,8 @@ import com.github.abel533.database.introspector.SqlServerIntrospector;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -129,6 +128,32 @@ public class DBMetadataUtils {
             return introspector.introspectTables(config);
         } finally {
             closeConnection();
+        }
+    }
+
+    public static void sortTables(List<IntrospectedTable> tables) {
+        if (StringUtils.isNotEmpty(tables)) {
+            Collections.sort(tables, new Comparator<IntrospectedTable>() {
+                @Override
+                public int compare(IntrospectedTable o1, IntrospectedTable o2) {
+                    return o1.getName().compareTo(o2.getName());
+                }
+            });
+        }
+    }
+
+    public static void sortColumns(List<IntrospectedColumn> columns) {
+        if (StringUtils.isNotEmpty(columns)) {
+            Collections.sort(columns, new Comparator<IntrospectedColumn>() {
+                @Override
+                public int compare(IntrospectedColumn o1, IntrospectedColumn o2) {
+                    int result = o1.getTableName().compareTo(o2.getTableName());
+                    if (result == 0) {
+                        result = o1.getName().compareTo(o2.getName());
+                    }
+                    return result;
+                }
+            });
         }
     }
 

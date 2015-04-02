@@ -2,7 +2,7 @@
 
 本工具可用于数据库表和字段的查询，以及数据库元数据的进一步使用。
 
-#本工具目前分为两部分
+#本工具目前分为三部分
 
 ##DBMetadata-core
 
@@ -75,6 +75,31 @@ for (IntrospectedTable table : list) {
                 column.getJavaProperty() + " - " +
                 column.getFullyQualifiedJavaType().getFullyQualifiedName() + " - " +
                 column.getRemarks());
+    }
+}
+```
+
+##DBMetadata-generator
+
+利用数据库元数据，根据模板生成一些内容。
+
+该项目目前只提供了一个`BeetlTemplate`，只有两个静态方法，这只是一个简单的例子。
+
+使用方法如下：
+
+```java
+public static void main(String[] args) throws IOException, SQLException {
+    DBMetadataUtils dbUtils = new DBMetadataUtils(
+            new SimpleDataSource(Dialect.ORACLE, "jdbc:oracle:thin:@//localhost/orcl", "user", ""));
+
+    List<IntrospectedTable> tables = dbUtils.introspectTables(dbUtils.getDefaultConfig());
+
+    DBMetadataUtils.sortTables(tables);
+
+    BeetlTemplate.exportDatabaseHtml(tables, "d:/test", "db");
+
+    for (IntrospectedTable table : tables) {
+        BeetlTemplate.exportTableHtml(table, "d:/test/tables", table.getName());
     }
 }
 ```

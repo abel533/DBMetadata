@@ -10,5 +10,6 @@
   <modules>
     <module>DBMetadata-core</module>
     <module>DBMetadata-swing</module>
+    <module>DBMetadata-generator</module>
   </modules>
 </project>
