@@ -2,6 +2,17 @@
 
 本工具可用于数据库表和字段的查询，以及数据库元数据的进一步使用。
 
+目前支持以下数据库(都能正确获取注释信息):
+
+ 1. `Oracle`
+ 2. `Mysql`
+ 3. `MariaDB`
+ 4. `SQLite`
+ 5. `Hsqldb`
+ 6. `PostgreSQL`
+ 7. `DB2`
+ 8. `SqlServer(2005+)` - 必须使用jtds驱动
+
 #本工具目前分为三部分
 
 ##DBMetadata-core
