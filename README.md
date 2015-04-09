@@ -29,11 +29,11 @@
 <dependency>
     <groupId>com.github.abel533</groupId>
     <artifactId>DBMetadata-core</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
 </dependency>
 ```
 
-下载Jar包:[DBMetadata-core-0.1.0.jar](https://oss.sonatype.org/content/repositories/releases/com/github/abel533/DBMetadata-core/0.1.0/DBMetadata-core-0.1.0.jar)
+下载Jar包:[DBMetadata-core-x.x.x.jar](https://oss.sonatype.org/content/repositories/releases/com/github/abel533/DBMetadata-core/)
 
 ###2. 使用方法
 
