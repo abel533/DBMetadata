@@ -1,4 +1,4 @@
-#数据库元数据
+# 数据库元数据
 
 本工具可用于数据库表和字段的查询，以及数据库元数据的进一步使用。
 
@@ -13,17 +13,17 @@
  7. `DB2`
  8. `SqlServer(2005+)` - 必须使用jtds驱动
 
-#本工具目前分为三部分
+# 本工具目前分为三部分
 
-##DBMetadata-core
+## DBMetadata-core
 
 数据库元数据核心部分，该部分完全独立，不依赖任何第三方，获取元数据部分的代码参考了MyBatis Generator。
 
 如果你要连接数据库，需要有该数据库的JDBC驱动。
 
-###使用方法：
+### 使用方法：
 
-###1. 引入jar包或者Maven依赖：
+### 1. 引入jar包或者Maven依赖：
 
 ```xml
 <dependency>
@@ -35,7 +35,7 @@
 
 下载Jar包:[DBMetadata-core-x.x.x.jar](https://oss.sonatype.org/content/repositories/releases/com/github/abel533/DBMetadata-core/)
 
-###2. 使用方法
+### 2. 使用方法
 
 首先创建一个`SimpleDataSource`:
 ```java
@@ -90,7 +90,7 @@ for (IntrospectedTable table : list) {
 }
 ```
 
-##DBMetadata-generator
+## DBMetadata-generator
 
 利用数据库元数据，根据模板生成一些内容。
 
@@ -115,13 +115,13 @@ public static void main(String[] args) throws IOException, SQLException {
 }
 ```
 
-##DBMetadata-swing
+## DBMetadata-swing
 
 这个子项目也算是一个对**DBMetadata-core**的使用，通过上述工具获取元数据后，使用swing界面展示数据，并且可以通过查询来筛选符合要求的数据。
 
 这个项目除了实现基本的表和字段查询外，还算是一个基于界面使用该工具的基础，你可以在该项目基础上增加其他功能。
 
-###启动
+### 启动
 
 运行`com.github.abel533.Launch`即可启动本项目。
 
@@ -139,7 +139,7 @@ public static void main(String[] args) throws IOException, SQLException {
 
 首先给run.sh增加执行权限，然后运行run.sh
 
-###界面预览
+### 界面预览
 
 登录界面
 
