@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 /**
@@ -56,6 +57,16 @@ public final class SimpleDataSource implements DataSource {
     @Override
     public Connection getConnection() throws SQLException {
         if (delegate instanceof SimpleDataSource) {
+            if (this.dialect.equals(Dialect.MYSQL)){
+                Properties props =new Properties();
+                props.setProperty("user", user);
+                props.setProperty("password", pwd);
+                // 获取列字段注释
+                props.setProperty("remarks", "true");
+                // 获取表注释
+                props.setProperty("useInformationSchema", "true");
+                return DriverManager.getConnection(url,props);
+            }
             return DriverManager.getConnection(url, user, pwd);
         } else {
             return delegate.getConnection();
